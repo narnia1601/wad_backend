@@ -25,6 +25,7 @@ var UserSchema = new Schema({
 
 var ItinerariesSchema = new Schema({
     title: String,
+    country: String, // added #1
     days: Number,
     attractions: [Schema.Types.Mixed],
     comments: [Schema.Types.Mixed]
@@ -35,6 +36,7 @@ var Itineraries = mongoose.model('itineraries', ItinerariesSchema)
 
 app.post('/upload', (req,res) => {
     var title = req.body.body.title
+    var country = req.body.body.country // added #2
     var days = req.body.body.days
     var upvotes = 0
     var itineraryArr = []
@@ -59,6 +61,7 @@ app.post('/upload', (req,res) => {
     }
     Itineraries.create({
         title: title,
+        country: country, // added #3
         days: days,
         attractions: itineraryArr,
         comments: []
@@ -147,6 +150,25 @@ app.get('/itineraries/:id', async (req,res) => {
         res.send(data)
     })
 })
+
+
+// added #4
+// Mongodb agrgegate $match by country
+app.get('/itineraries/country', (req, res) => {
+    var countrySearched = req.body.body.country
+    Itineraries.aggregate([
+        {
+            $match: {
+                country: countrySearched
+            }
+        }
+    ],
+        (err, data) => {
+            res.send(data)
+        }
+    )
+})
+
 
 app.get('/', (req,res) => {
     res.send("It's working")
