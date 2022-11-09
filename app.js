@@ -94,7 +94,7 @@ app.post('/submitComment/:id', async (req, res) => {
     res.send("Comments submitted")
 })
 
-app.get('/itineraries', async (req,res) => {
+app.post('/itineraries', async (req,res) => {
     const itineraries = await Itineraries.find({})
     res.send(itineraries)
 })
@@ -137,15 +137,15 @@ app.post('/register', async (req,res) => {
     }
 })
 
-app.get('/user', async (req,res) => {
-    var _id = req.query._id
+app.post('/user', async (req,res) => {
+    var _id = req.body._id
     Users.findOne({_id: _id}, async (err, data) => {
         res.send(data)
     })
 })
 
-app.get('/itineraries/:id', async (req,res) => {
-    var id = req.params.id
+app.post('/itineraries/:id', async (req,res) => {
+    var id = req.body.id
     Itineraries.findOne({id: id}, (err, data) => {
         res.send(data)
     })
@@ -154,7 +154,7 @@ app.get('/itineraries/:id', async (req,res) => {
 
 // added #4
 // Mongodb agrgegate $match by country
-app.get('/itineraries/country', (req, res) => {
+app.post('/itineraries/country', (req, res) => {
     var countrySearched = req.body.body.country
     Itineraries.aggregate([
         {
@@ -170,8 +170,8 @@ app.get('/itineraries/country', (req, res) => {
 })
 
 
-app.get('/', (req,res) => {
-    res.send("It's working")
+app.post('/', (req,res) => {
+    res.status(200).send("It's working")
 })
 
 app.listen(8080)
